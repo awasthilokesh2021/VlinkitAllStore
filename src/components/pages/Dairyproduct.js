@@ -1,14 +1,20 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import items from "./Data"; // Import the product data
-import dairyItems from "./Dairyproductdata"; // Your dairy product data
+import { useSelector, useDispatch } from "react-redux";
+import items from "./Data";
+import dairyItems from "./Dairyproductdata";
+import { addtocart } from "../features/Cartslice";
 
 const Dairyproduct = () => {
-  const { id } = useParams(); // Get the product id from URL
-  const product = items.find((item) => item.id === parseInt(id)); // Find the product based on the id
+  const cardAdd = useSelector((state) => state.cartData);
+  console.log(cardAdd);
+  const dispatch = useDispatch();
+
+  const { id } = useParams();
+  const product = items.find((item) => item.id === parseInt(id));
 
   if (!product) {
-    return <div>Product not found</div>; // Handle case where product is not found
+    return <div>Product not found</div>;
   }
 
   return (
@@ -84,7 +90,7 @@ const Dairyproduct = () => {
             </div>
             <div className="text-gray-400">Sort By</div>
           </div>
-          
+
           {/* Card Data Section */}
           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 mt-6">
             {dairyItems.map((item) => (
@@ -93,16 +99,21 @@ const Dairyproduct = () => {
                 className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300"
               >
                 <img
-                  src={item.img}
+                  src={item.image}
                   alt={item.name}
                   className="w-full h-40 object-cover"
                 />
                 <div className="p-4">
                   <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
-                  <p className="text-sm text-gray-600">{item.quantity}</p>
+                  <p className="text-sm text-gray-600">{item.qunt}</p>
                   <div className="flex justify-between items-center mt-4">
-                    <span className="text-lg font-bold text-green-500">₹{item.cost}</span>
-                    <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
+                    <span className="text-lg font-bold text-green-500">
+                      ₹{item.cost}
+                    </span>
+                    <button
+                      onClick={() => dispatch(addtocart(item))}
+                      className="bg-green-500 text-white cursor-pointer px-4 py-2 rounded hover:bg-green-600 transition duration-300"
+                    >
                       Add
                     </button>
                   </div>
@@ -117,4 +128,3 @@ const Dairyproduct = () => {
 };
 
 export default Dairyproduct;
-
